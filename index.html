@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bon Officiel – Resto Père/Fils</title>
+  <meta name="theme-color" content="#111111" />
+  <style>
+    :root { --bg:#0b0c10; --card:#12141b; --txt:#f5f5f5; --muted:#b7bcc7; --accent:#ffd166; }
+    *{box-sizing:border-box} body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 600px at 20% 0%, #1b2233 0%, var(--bg) 55%);
+      color:var(--txt); min-height:100vh; display:grid; place-items:center; padding:24px;
+    }
+    .card{
+      width:min(720px, 100%); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08); border-radius:24px; padding:28px; box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      position:relative; overflow:hidden;
+    }
+    .badge{
+      display:inline-flex; gap:10px; align-items:center;
+      background:rgba(255,209,102,.12); border:1px solid rgba(255,209,102,.25);
+      color:var(--accent); padding:10px 14px; border-radius:999px; font-weight:650;
+    }
+    h1{margin:18px 0 8px; font-size:clamp(28px, 4vw, 42px); letter-spacing:-.02em}
+    p{margin:0; color:var(--muted); line-height:1.6; font-size:16px}
+    .grid{display:grid; gap:14px; margin-top:18px}
+    .row{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
+    .btn{
+      border:0; cursor:pointer; padding:12px 16px; border-radius:14px; font-weight:700;
+      background:var(--accent); color:#1a1a1a;
+    }
+    .btn.secondary{background:rgba(255,255,255,.08); color:var(--txt); border:1px solid rgba(255,255,255,.12)}
+    .panel{
+      margin-top:18px; padding:16px; border-radius:18px;
+      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+    }
+    input, textarea{
+      width:100%; margin-top:8px; padding:12px 12px; border-radius:14px;
+      background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.12); color:var(--txt);
+      outline:none;
+    }
+    small{color:var(--muted)}
+    .spark{
+      position:absolute; inset:-120px -120px auto auto; width:320px; height:320px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,209,102,.35), rgba(255,209,102,0) 60%);
+      filter: blur(2px);
+    }
+    .footer{margin-top:16px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    a{color:var(--accent); text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="spark"></div>
+
+    <div class="badge">🎟️ Bon Officiel • Expérience Père/Fils</div>
+    <h1 id="title">Resto Père/Fils</h1>
+    <p id="subtitle">Un moment rien que nous deux. Tu choisis le resto, je m’occupe du reste.</p>
+
+    <div class="grid panel">
+      <div>
+        <strong>✅ Statut</strong><br />
+        <small id="status">À activer quand tu veux (valable à vie).</small>
+      </div>
+
+      <div>
+        <label for="place"><strong>🍽️ Le resto choisi :</strong></label>
+        <input id="place" placeholder="Ex: ton resto préféré, ou une nouvelle découverte…" />
+      </div>
+
+      <div>
+        <label for="date"><strong>📅 Date / moment :</strong></label>
+        <input id="date" placeholder="Ex: samedi soir, dans 2 semaines…" />
+      </div>
+
+      <div>
+        <label for="note"><strong>📝 Petite note (optionnel) :</strong></label>
+        <textarea id="note" rows="3" placeholder="Ex: ‘J’ai envie qu’on prenne le temps de discuter.’"></textarea>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="save">Enregistrer</button>
+        <button class="btn secondary" id="share">Partager / envoyer</button>
+        <button class="btn secondary" id="reset">Réinitialiser</button>
+      </div>
+
+      <small>💡 Astuce : tu peux remplir ensemble et garder la page en souvenir.</small>
+    </div>
+
+    <div class="footer">
+      <small>Fait avec ❤️ par ton fils.</small>
+      <small><a href="#" id="print">Imprimer</a></small>
+    </div>
+  </div>
+
+  <script>
+    // Perso : tu peux mettre son prénom directement ici
+    const PAPA = "Papa";
+
+    const els = {
+      title: document.getElementById("title"),
+      place: document.getElementById("place"),
+      date: document.getElementById("date"),
+      note: document.getElementById("note"),
+      status: document.getElementById("status"),
+      save: document.getElementById("save"),
+      share: document.getElementById("share"),
+      reset: document.getElementById("reset"),
+      print: document.getElementById("print"),
+    };
+
+    els.title.textContent = `Resto Père/Fils – ${PAPA}`;
+
+    const KEY = "bon_pere_fils_v1";
+    const load = () => {
+      try {
+        const data = JSON.parse(localStorage.getItem(KEY) || "{}");
+        els.place.value = data.place || "";
+        els.date.value = data.date || "";
+        els.note.value = data.note || "";
+        if (data.place || data.date || data.note) {
+          els.status.textContent = "Activé ✅ (modifiable quand tu veux).";
+        }
+      } catch {}
+    };
+
+    const save = () => {
+      const data = { place: els.place.value.trim(), date: els.date.value.trim(), note: els.note.value.trim() };
+      localStorage.setItem(KEY, JSON.stringify(data));
+      els.status.textContent = "Enregistré ✅";
+      // petite confirmation discrète
+      els.save.textContent = "Enregistré !";
+      setTimeout(()=> els.save.textContent="Enregistrer", 900);
+    };
+
+    const reset = () => {
+      localStorage.removeItem(KEY);
+      els.place.value = ""; els.date.value = ""; els.note.value = "";
+      els.status.textContent = "À activer quand tu veux (valable à vie).";
+    };
+
+    const share = async () => {
+      const text =
+`Bon Officiel – Resto Père/Fils
+Resto: ${els.place.value || "à choisir"}
+Quand: ${els.date.value || "à définir"}
+Note: ${els.note.value || "-"}
+
+Lien: ${location.href}`;
+      if (navigator.share) {
+        try { await navigator.share({ title: "Bon Resto Père/Fils", text, url: location.href }); }
+        catch {}
+      } else {
+        await navigator.clipboard.writeText(text);
+        els.status.textContent = "Copié dans le presse-papiers ✅";
+      }
+    };
+
+    els.save.addEventListener("click", save);
+    els.reset.addEventListener("click", reset);
+    els.share.addEventListener("click", share);
+    els.print.addEventListener("click", (e)=>{ e.preventDefault(); window.print(); });
+
+    load();
+  </script>
+</body>
+</html>
