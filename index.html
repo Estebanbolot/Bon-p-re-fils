@@ -106,7 +106,6 @@
       save: document.getElementById("save"),
       share: document.getElementById("share"),
       reset: document.getElementById("reset"),
-      print: document.getElementById("print"),
     };
 
     els.title.textContent = `Resto Père/Fils – ${PAPA}`;
@@ -159,7 +158,6 @@ Lien: ${location.href}`;
     els.save.addEventListener("click", save);
     els.reset.addEventListener("click", reset);
     els.share.addEventListener("click", share);
-    els.print.addEventListener("click", (e)=>{ e.preventDefault(); window.print(); });
 
     load();
   </script>
