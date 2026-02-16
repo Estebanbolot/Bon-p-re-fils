@@ -94,7 +94,7 @@
 
   <script>
     // Perso : tu peux mettre son prénom directement ici
-    const PAPA = "Papa";
+    const PAPA = "Papa ❤️";
 
     const els = {
       title: document.getElementById("title"),
@@ -146,7 +146,7 @@ Note: ${els.note.value || "-"}
 
 Lien: ${location.href}`;
       if (navigator.share) {
-        try { await navigator.share({ title: "Bon Resto Père/Fils", text, url: location.href }); }
+        try { await navigator.share({ title: "Bon Resto, joyeux anniversaire ", text, url: location.href }); }
         catch {}
       } else {
         await navigator.clipboard.writeText(text);
